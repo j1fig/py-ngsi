@@ -8,6 +8,7 @@ _packages = find_packages(where='.')
 
 install_requires = [
     'requests',
+    'isodate',
     'nose',
 ]
 

@@ -20,5 +20,5 @@ class Attribute(object):
     pass
 
 
-class QueryError(Exception):
+class ApiError(Exception):
     pass
