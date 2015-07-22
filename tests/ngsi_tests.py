@@ -10,3 +10,45 @@ class NgsiClientTests(TestCase):
     def test_version(self):
         c = Client(host=self.test_host)
         self.assertEqual(c.version()['version'], '0.19.0')
+
+    def test_create_context(self):
+        test_elements = [
+        {
+            "type": "Room",
+            "isPattern": "false",
+            "id": "Room3",
+            "attributes": [
+                {
+                "name": "temperature",
+                "type": "float",
+                "value": "23"
+                },
+                {
+                "name": "pressure",
+                "type": "integer",
+                "value": "720"
+                }
+            ]
+        },
+        {
+            "type": "Room",
+            "isPattern": "false",
+            "id": "Room4",
+            "attributes": [
+                {
+                "name": "temperature",
+                "type": "float",
+                "value": "33"
+                },
+                {
+                "name": "pressure",
+                "type": "integer",
+                "value": "1100"
+                }
+            ]
+        }]
+
+        c = Client(host=self.test_host)
+        r = c.create_context(test_elements)
+        for element in r:
+            self.assertEqual(element['statusCode']['code'],'200')
