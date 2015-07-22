@@ -19,5 +19,5 @@ Refer to the v2 API [docs](http://telefonicaid.github.io/fiware-orion/api/v2/coo
 
 ##### TODO
 
-1. Refacto Client: Optional command arguments go in kwargs
+1. Refactor Client: Optional command arguments go in kwargs
 2. Improve and actually use the models.py

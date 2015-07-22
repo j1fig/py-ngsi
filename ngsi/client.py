@@ -60,7 +60,7 @@ class Client(object):
 
     def unsubscribe_context(self, subscription_id):
         return self._unsubscribe_context(
-            subscriptionId=subscription_id,
+            subscriptionId=subscription_id
         )
 
     def _update_context(self, elements, action=None):
