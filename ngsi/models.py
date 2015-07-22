@@ -18,3 +18,7 @@ class Attribute(object):
     NGSI Context Element Attribute
     """
     pass
+
+
+class QueryError(Exception):
+    pass

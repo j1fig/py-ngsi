@@ -52,3 +52,17 @@ class NgsiClientTests(TestCase):
         r = c.create_context(test_elements)
         for element in r:
             self.assertEqual(element['statusCode']['code'],'200')
+
+    def test_get_context(self):
+        test_entities = [
+            {
+                "type": "Room",
+                "isPattern": "true",
+                "id": "Room*"
+            }
+        ]
+
+        c = Client(host=self.test_host)
+        r = c.get_context(test_entities)
+        for element in r:
+            self.assertEqual(element['statusCode']['code'],'200')
