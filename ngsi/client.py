@@ -41,13 +41,26 @@ class Client(object):
                           callback_url,
                           duration,
                           notification_type,
-                          attributes=None):
+                          attributes=None,
+                          throttling=None):
         return self._subscribe_context(
             entities,
             callback_url,
             duration,
             notification_type,
-            attributes
+            attributes,
+            throttling
+        )
+
+    def update_context_subscription(self, subscription_id, **kwargs):
+        return self._update_context_subscription(
+            subscriptionId=subscription_id,
+            **kwargs
+        )
+
+    def unsubscribe_context(self, subscription_id):
+        return self._unsubscribe_context(
+            subscriptionId=subscription_id,
         )
 
     def _update_context(self, elements, action=None):
@@ -69,7 +82,8 @@ class Client(object):
                           callback_url,
                           duration,
                           notification_conditions,
-                          attributes=None):
+                          attributes=None,
+                          throttling=None):
         data = {}
         data['entities'] = entities
         data['reference'] = callback_url
@@ -77,7 +91,23 @@ class Client(object):
         data['notifyConditions'] = notification_conditions
         if attributes:
             data['attributes'] = attributes
+        if throttling:
+            data['throttling'] = duration_isoformat(throttling)
         return self._call_api(method='post', url='subscribeContext', json=data)
+
+    def _update_context_subscription(self, **kwargs):
+        return self._call_api(
+            method='post',
+            url='updateContextSubscription',
+            json=kwargs
+        )
+
+    def _unsubscribe_context(self, **kwargs):
+        return self._call_api(
+            method='post',
+            url='unsubscribeContext',
+            json=kwargs
+        )
 
     def _call_api(self, method, url, params=None, json=None):
         """
@@ -96,6 +126,14 @@ class Client(object):
             return json_response['contextResponses']
         elif 'subscribeResponse' in json_response:
             return json_response['subscribeResponse']
+        elif 'statusCode' in json_response:
+            # unsubscribe context response
+            if json_response['statusCode']['code']!='200':
+                print json
+                raise ApiError('Error code ' +
+                                 json_response['statusCode']['code'] + ': ' +
+                                 json_response['statusCode']['reasonPhrase'])
+            return json_response
         elif 'errorCode' in json_response:
             error = json_response['errorCode']
             raise ApiError('Error code ' +

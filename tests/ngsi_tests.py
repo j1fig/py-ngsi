@@ -98,3 +98,83 @@ class NgsiClientTests(TestCase):
         )
 
         self.assertTrue('subscriptionId' in r)
+
+    def test_update_subscribe_context(self):
+        test_reference = 'http://requestb.in/1g22in51'
+        test_entities = [
+            {
+                "type": "Room",
+                "isPattern": "false",
+                "id": "Room1"
+            }
+        ]
+        test_attributes = ["temperature"]
+        test_duration = timedelta(days=30)
+        test_notify_conditions = [
+            {
+                "type": "ONTIMEINTERVAL",
+                "condValues": [
+                    "PT10S"
+                ]
+            }
+        ]
+        test_update_notify_conditions = [
+            {
+                "type": "ONTIMEINTERVAL",
+                "condValues": [
+                    "PT15S"
+                ]
+            }
+        ]
+
+        c = Client(host=self.test_host)
+        r = c.subscribe_context(
+            entities=test_entities,
+            callback_url=test_reference,
+            duration=test_duration,
+            notification_type=test_notify_conditions,
+            attributes=test_attributes
+        )
+        sub_id = r['subscriptionId']
+
+        r = c.update_context_subscription(
+            sub_id,
+            notifyConditions=test_update_notify_conditions
+        )
+        self.assertEqual(r['subscriptionId'],sub_id)
+
+        r = c.unsubscribe_context(sub_id)
+
+    def test_unsubscribe_context(self):
+        test_reference = 'http://requestb.in/1g22in51'
+        test_entities = [
+            {
+                "type": "Room",
+                "isPattern": "false",
+                "id": "Room1"
+            }
+        ]
+        test_attributes = ["temperature"]
+        test_duration = timedelta(days=30)
+        test_notify_conditions = [
+            {
+                "type": "ONTIMEINTERVAL",
+                "condValues": [
+                    "PT10S"
+                ]
+            }
+        ]
+
+        c = Client(host=self.test_host)
+        r = c.subscribe_context(
+            entities=test_entities,
+            callback_url=test_reference,
+            duration=test_duration,
+            notification_type=test_notify_conditions,
+            attributes=test_attributes
+        )
+        sub_id = r['subscriptionId']
+
+        r = c.unsubscribe_context(sub_id)
+
+        self.assertEqual(r['statusCode']['code'],'200')
