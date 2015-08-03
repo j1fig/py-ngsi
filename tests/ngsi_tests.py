@@ -6,7 +6,7 @@ from ngsi import Client
 
 class NgsiClientTests(TestCase):
     def setUp(self):
-        self.test_host = '130.206.117.120'
+        self.test_host = '127.0.0.1'
         self.test_elements = [
             {
                 "type": "Room",
@@ -64,7 +64,7 @@ class NgsiClientTests(TestCase):
 
     def test_version(self):
         c = Client(host=self.test_host)
-        self.assertEqual(c.version()['version'], '0.19.0')
+        self.assertEqual(c.version()['version'], '0.22.0-next')
 
     def test_create_context(self):
         c = Client(host=self.test_host)
